@@ -11,6 +11,8 @@ permissions:
 env:
   GODOT_VERSION: 4.7.2
   OPENXR_VENDORS_VERSION: 5.1.0-stable
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
 jobs:
   quest-apk:
@@ -30,19 +32,16 @@ jobs:
           mv openxr-vendors/asset/addons/godotopenxrvendors addons/godotopenxrvendors
 
       - name: Set up Java 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install Android packages
         shell: bash
         run: |
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager "platform-tools" "build-tools;35.0.0" "platforms;android-35" "cmdline-tools;latest" "cmake;3.10.2.4988404" "ndk;23.2.8568313"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"             "platform-tools"             "build-tools;35.0.0"             "platforms;android-35"             "cmake;3.10.2.4988404"             "ndk;23.2.8568313"
 
       - name: Set up Godot
         uses: chickensoft-games/setup-godot@v2
@@ -55,11 +54,15 @@ jobs:
         shell: bash
         run: godot --headless --editor --quit-after 2
 
-      - name: Build signed debug Quest APK
+      - name: Install Android build template
+        shell: bash
+        run: godot --headless --install-android-build-template
+
+      - name: Build Quest APK
         shell: bash
         run: |
           mkdir -p build/android-quest
-          godot --headless --install-android-build-template --export-debug "Android Quest"
+          godot --headless --verbose --export-debug "Android Quest" "build/android-quest/ZC2-VR.apk"
           test -s build/android-quest/ZC2-VR.apk
 
       - name: Upload APK artifact
