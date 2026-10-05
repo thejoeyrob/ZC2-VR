@@ -43,6 +43,12 @@ jobs:
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"             "platform-tools"             "build-tools;35.0.0"             "platforms;android-35"             "cmake;3.10.2.4988404"             "ndk;23.2.8568313"
 
+      - name: Start Android debug bridge
+        shell: bash
+        run: |
+          "$ANDROID_HOME/platform-tools/adb" start-server
+          "$ANDROID_HOME/platform-tools/adb" devices
+
       - name: Set up Godot
         uses: chickensoft-games/setup-godot@v2
         with:
@@ -50,19 +56,15 @@ jobs:
           use-dotnet: false
           include-templates: true
 
-      - name: Import project
-        shell: bash
-        run: godot --headless --editor --quit-after 2
-
       - name: Install Android build template
         shell: bash
-        run: godot --headless --install-android-build-template
+        run: godot --headless --path . --install-android-build-template
 
       - name: Build Quest APK
         shell: bash
         run: |
           mkdir -p build/android-quest
-          godot --headless --verbose --export-debug "Android Quest" "build/android-quest/ZC2-VR.apk"
+          godot --headless --path . --verbose --export-debug "Android Quest" "build/android-quest/ZC2-VR.apk"
           test -s build/android-quest/ZC2-VR.apk
 
       - name: Upload APK artifact
