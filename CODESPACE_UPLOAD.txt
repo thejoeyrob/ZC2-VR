@@ -1,0 +1,22 @@
+ZC2 VR - ONE-TIME CODESPACE INSTALL
+
+1. Upload this ZIP into the root of your ZC2-VR Codespace.
+2. Open the Codespace Terminal.
+3. Run these commands exactly:
+
+unzip -o ZC2-VR-Quest-Prototype.zip
+rm ZC2-VR-Quest-Prototype.zip
+git add .
+git commit -m "Add native Quest ZC2 VR prototype and APK cloud build"
+git push origin main
+
+4. In GitHub open ZC2-VR > Actions > Build Quest APK.
+5. When the run turns green, open the newest Release and download ZC2-VR.apk directly on your Quest.
+6. Install the APK with your APK-capable file manager. Developer Mode must remain enabled.
+
+If Git asks you to configure your name/email in Codespaces, run:
+
+git config user.name "JW E.D.S."
+git config user.email "YOUR_GITHUB_EMAIL"
+
+Then repeat the commit and push commands.

@@ -1,0 +1,79 @@
+name: Build Quest APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  GODOT_VERSION: 4.7.2
+  OPENXR_VENDORS_VERSION: 5.1.0-stable
+
+jobs:
+  quest-apk:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install OpenXR Vendors plugin
+        shell: bash
+        run: |
+          curl -L -o openxr-vendors.zip "https://github.com/GodotVR/godot_openxr_vendors/releases/download/${{ env.OPENXR_VENDORS_VERSION }}/godotopenxrvendorsaddon.zip"
+          unzip -q openxr-vendors.zip -d openxr-vendors
+          mkdir -p addons
+          mv openxr-vendors/asset/addons/godotopenxrvendors addons/godotopenxrvendors
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android packages
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platform-tools" "build-tools;35.0.0" "platforms;android-35" "cmdline-tools;latest" "cmake;3.10.2.4988404" "ndk;23.2.8568313"
+
+      - name: Set up Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: ${{ env.GODOT_VERSION }}
+          use-dotnet: false
+          include-templates: true
+
+      - name: Import project
+        shell: bash
+        run: godot --headless --editor --quit-after 2
+
+      - name: Build signed debug Quest APK
+        shell: bash
+        run: |
+          mkdir -p build/android-quest
+          godot --headless --install-android-build-template --export-debug "Android Quest"
+          test -s build/android-quest/ZC2-VR.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZC2-VR-Quest-APK
+          path: build/android-quest/ZC2-VR.apk
+          if-no-files-found: error
+
+      - name: Publish Quest test release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: quest-test-${{ github.run_number }}
+          name: ZC2 VR Quest Test #${{ github.run_number }}
+          prerelease: true
+          generate_release_notes: true
+          files: build/android-quest/ZC2-VR.apk

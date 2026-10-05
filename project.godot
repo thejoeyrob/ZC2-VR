@@ -1,0 +1,27 @@
+; ZC2 VR - Quest native OpenXR prototype
+config_version=5
+
+[application]
+config/name="ZC2 VR Arena"
+run/main_scene="res://game/main.tscn"
+config/features=PackedStringArray("4.7")
+boot_splash/bg_color=Color(0.025, 0.02, 0.04, 1)
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
+[physics]
+3d/physics_engine="GodotPhysics3D"
+
+[rendering]
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
+textures/vram_compression/import_etc2_astc=true
+
+[xr]
+openxr/enabled=true
+openxr/default_action_map="res://openxr_action_map.tres"
+openxr/foveation_level=2
+openxr/foveation_dynamic=true
+shaders/enabled=true

@@ -1,0 +1,162 @@
+[gd_resource type="OpenXRActionMap" load_steps=44 format=3]
+
+[sub_resource type="OpenXRAction" id="trigger"]
+resource_name = "trigger"
+localized_name = "Trigger"
+toplevel_paths = PackedStringArray("/user/hand/left", "/user/hand/right")
+
+[sub_resource type="OpenXRAction" id="grip"]
+resource_name = "grip"
+localized_name = "Grip"
+toplevel_paths = PackedStringArray("/user/hand/left", "/user/hand/right")
+
+[sub_resource type="OpenXRAction" id="primary"]
+resource_name = "primary"
+localized_name = "Thumbstick"
+action_type = 2
+toplevel_paths = PackedStringArray("/user/hand/left", "/user/hand/right")
+
+[sub_resource type="OpenXRAction" id="ax_button"]
+resource_name = "ax_button"
+localized_name = "A/X Button"
+action_type = 0
+toplevel_paths = PackedStringArray("/user/hand/left", "/user/hand/right")
+
+[sub_resource type="OpenXRAction" id="by_button"]
+resource_name = "by_button"
+localized_name = "B/Y Button"
+action_type = 0
+toplevel_paths = PackedStringArray("/user/hand/left", "/user/hand/right")
+
+[sub_resource type="OpenXRAction" id="aim_pose"]
+resource_name = "aim_pose"
+localized_name = "Aim Pose"
+action_type = 3
+toplevel_paths = PackedStringArray("/user/hand/left", "/user/hand/right")
+
+[sub_resource type="OpenXRAction" id="grip_pose"]
+resource_name = "grip_pose"
+localized_name = "Grip Pose"
+action_type = 3
+toplevel_paths = PackedStringArray("/user/hand/left", "/user/hand/right")
+
+[sub_resource type="OpenXRAction" id="haptic"]
+resource_name = "haptic"
+localized_name = "Haptic"
+action_type = 4
+toplevel_paths = PackedStringArray("/user/hand/left", "/user/hand/right")
+
+[sub_resource type="OpenXRActionSet" id="action_set"]
+resource_name = "godot"
+localized_name = "ZC2 Gameplay"
+actions = [SubResource("trigger"), SubResource("grip"), SubResource("primary"), SubResource("ax_button"), SubResource("by_button"), SubResource("aim_pose"), SubResource("grip_pose"), SubResource("haptic")]
+
+[sub_resource type="OpenXRIPBinding" id="o1"]
+action = SubResource("aim_pose")
+binding_path = "/user/hand/left/input/aim/pose"
+[sub_resource type="OpenXRIPBinding" id="o2"]
+action = SubResource("aim_pose")
+binding_path = "/user/hand/right/input/aim/pose"
+[sub_resource type="OpenXRIPBinding" id="o3"]
+action = SubResource("grip_pose")
+binding_path = "/user/hand/left/input/grip/pose"
+[sub_resource type="OpenXRIPBinding" id="o4"]
+action = SubResource("grip_pose")
+binding_path = "/user/hand/right/input/grip/pose"
+[sub_resource type="OpenXRIPBinding" id="o5"]
+action = SubResource("trigger")
+binding_path = "/user/hand/left/input/trigger/value"
+[sub_resource type="OpenXRIPBinding" id="o6"]
+action = SubResource("trigger")
+binding_path = "/user/hand/right/input/trigger/value"
+[sub_resource type="OpenXRIPBinding" id="o7"]
+action = SubResource("grip")
+binding_path = "/user/hand/left/input/squeeze/value"
+[sub_resource type="OpenXRIPBinding" id="o8"]
+action = SubResource("grip")
+binding_path = "/user/hand/right/input/squeeze/value"
+[sub_resource type="OpenXRIPBinding" id="o9"]
+action = SubResource("primary")
+binding_path = "/user/hand/left/input/thumbstick"
+[sub_resource type="OpenXRIPBinding" id="o10"]
+action = SubResource("primary")
+binding_path = "/user/hand/right/input/thumbstick"
+[sub_resource type="OpenXRIPBinding" id="o11"]
+action = SubResource("ax_button")
+binding_path = "/user/hand/left/input/x/click"
+[sub_resource type="OpenXRIPBinding" id="o12"]
+action = SubResource("ax_button")
+binding_path = "/user/hand/right/input/a/click"
+[sub_resource type="OpenXRIPBinding" id="o13"]
+action = SubResource("by_button")
+binding_path = "/user/hand/left/input/y/click"
+[sub_resource type="OpenXRIPBinding" id="o14"]
+action = SubResource("by_button")
+binding_path = "/user/hand/right/input/b/click"
+[sub_resource type="OpenXRIPBinding" id="o15"]
+action = SubResource("haptic")
+binding_path = "/user/hand/left/output/haptic"
+[sub_resource type="OpenXRIPBinding" id="o16"]
+action = SubResource("haptic")
+binding_path = "/user/hand/right/output/haptic"
+
+[sub_resource type="OpenXRInteractionProfile" id="oculus"]
+interaction_profile_path = "/interaction_profiles/oculus/touch_controller"
+bindings = [SubResource("o1"), SubResource("o2"), SubResource("o3"), SubResource("o4"), SubResource("o5"), SubResource("o6"), SubResource("o7"), SubResource("o8"), SubResource("o9"), SubResource("o10"), SubResource("o11"), SubResource("o12"), SubResource("o13"), SubResource("o14"), SubResource("o15"), SubResource("o16")]
+
+[sub_resource type="OpenXRIPBinding" id="m1"]
+action = SubResource("aim_pose")
+binding_path = "/user/hand/left/input/aim/pose"
+[sub_resource type="OpenXRIPBinding" id="m2"]
+action = SubResource("aim_pose")
+binding_path = "/user/hand/right/input/aim/pose"
+[sub_resource type="OpenXRIPBinding" id="m3"]
+action = SubResource("grip_pose")
+binding_path = "/user/hand/left/input/grip/pose"
+[sub_resource type="OpenXRIPBinding" id="m4"]
+action = SubResource("grip_pose")
+binding_path = "/user/hand/right/input/grip/pose"
+[sub_resource type="OpenXRIPBinding" id="m5"]
+action = SubResource("trigger")
+binding_path = "/user/hand/left/input/trigger/value"
+[sub_resource type="OpenXRIPBinding" id="m6"]
+action = SubResource("trigger")
+binding_path = "/user/hand/right/input/trigger/value"
+[sub_resource type="OpenXRIPBinding" id="m7"]
+action = SubResource("grip")
+binding_path = "/user/hand/left/input/squeeze/value"
+[sub_resource type="OpenXRIPBinding" id="m8"]
+action = SubResource("grip")
+binding_path = "/user/hand/right/input/squeeze/value"
+[sub_resource type="OpenXRIPBinding" id="m9"]
+action = SubResource("primary")
+binding_path = "/user/hand/left/input/thumbstick"
+[sub_resource type="OpenXRIPBinding" id="m10"]
+action = SubResource("primary")
+binding_path = "/user/hand/right/input/thumbstick"
+[sub_resource type="OpenXRIPBinding" id="m11"]
+action = SubResource("ax_button")
+binding_path = "/user/hand/left/input/x/click"
+[sub_resource type="OpenXRIPBinding" id="m12"]
+action = SubResource("ax_button")
+binding_path = "/user/hand/right/input/a/click"
+[sub_resource type="OpenXRIPBinding" id="m13"]
+action = SubResource("by_button")
+binding_path = "/user/hand/left/input/y/click"
+[sub_resource type="OpenXRIPBinding" id="m14"]
+action = SubResource("by_button")
+binding_path = "/user/hand/right/input/b/click"
+[sub_resource type="OpenXRIPBinding" id="m15"]
+action = SubResource("haptic")
+binding_path = "/user/hand/left/output/haptic"
+[sub_resource type="OpenXRIPBinding" id="m16"]
+action = SubResource("haptic")
+binding_path = "/user/hand/right/output/haptic"
+
+[sub_resource type="OpenXRInteractionProfile" id="meta_plus"]
+interaction_profile_path = "/interaction_profiles/meta/touch_controller_plus"
+bindings = [SubResource("m1"), SubResource("m2"), SubResource("m3"), SubResource("m4"), SubResource("m5"), SubResource("m6"), SubResource("m7"), SubResource("m8"), SubResource("m9"), SubResource("m10"), SubResource("m11"), SubResource("m12"), SubResource("m13"), SubResource("m14"), SubResource("m15"), SubResource("m16")]
+
+[resource]
+action_sets = [SubResource("action_set")]
+interaction_profiles = [SubResource("oculus"), SubResource("meta_plus")]

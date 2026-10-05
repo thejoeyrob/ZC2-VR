@@ -1,0 +1,7 @@
+.godot/
+build/
+android/
+addons/
+openxr-vendors/
+openxr-vendors.zip
+*.tmp
