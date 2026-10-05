@@ -58,7 +58,14 @@ jobs:
 
       - name: Install Android build template
         shell: bash
-        run: godot --headless --path . --install-android-build-template
+        run: |
+          ANDROID_SOURCE="$(find "$HOME/.local/share/godot/export_templates" -type f -name android_source.zip -print -quit)"
+          test -n "$ANDROID_SOURCE"
+          echo "Using Android template: $ANDROID_SOURCE"
+          rm -rf android/build
+          mkdir -p android/build
+          unzip -q "$ANDROID_SOURCE" -d android/build
+          test -f android/build/build.gradle || test -f android/build/settings.gradle
 
       - name: Build Quest APK
         shell: bash
