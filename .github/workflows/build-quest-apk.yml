@@ -67,6 +67,8 @@ jobs:
           unzip -q "$ANDROID_SOURCE" -d android/build
           test -f android/build/build.gradle || test -f android/build/settings.gradle
 
+          printf '%s' "$GODOT_VERSION" > android/build/.build_version
+
       - name: Build Quest APK
         shell: bash
         run: |
