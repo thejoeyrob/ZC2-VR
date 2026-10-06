@@ -61,29 +61,29 @@ jobs:
           fi
 
           echo "Found Android template: $ANDROID_SOURCE"
-          TEMPLATE_DIR="$HOME/.local/share/godot/export_templates/$GODOT_VERSION/android"
 
-          # Clean and prepare template directory in standard Godot location
-          rm -rf "$TEMPLATE_DIR"
-          mkdir -p "$TEMPLATE_DIR"
+          # Godot expects the Android gradle template in the project's .godot directory
+          GODOT_ANDROID_DIR=".godot/builds/android_quest"
+          mkdir -p "$GODOT_ANDROID_DIR"
 
-          # Extract template to the standard Godot location
-          echo "Extracting template to: $TEMPLATE_DIR"
-          unzip -q "$ANDROID_SOURCE" -d "$TEMPLATE_DIR"
+          echo "Extracting template to: $GODOT_ANDROID_DIR"
+          unzip -q "$ANDROID_SOURCE" -d "$GODOT_ANDROID_DIR"
 
-          # Create .build_version file in template root
-          echo "Creating .build_version file with version: $GODOT_VERSION"
-          echo -n "$GODOT_VERSION" > "$TEMPLATE_DIR/.build_version"
+          # Create .build_version file for gradle build system
+          echo "Creating .build_version with version: $GODOT_VERSION"
+          echo -n "$GODOT_VERSION" > "$GODOT_ANDROID_DIR/.build_version"
 
-          # Verify version file exists
-          if [ -f "$TEMPLATE_DIR/.build_version" ]; then
-            echo "OK: Version file created: $(cat $TEMPLATE_DIR/.build_version)"
-            echo "Template directory contents:"
-            ls -la "$TEMPLATE_DIR" | head -15
+          # Verify installation
+          if [ -f "$GODOT_ANDROID_DIR/.build_version" ]; then
+            echo "OK: Template installed"
           else
-            echo "ERROR: Failed to create version file at $TEMPLATE_DIR/.build_version"
+            echo "ERROR: Failed to create version file"
             exit 1
           fi
+
+          # Update export preset to point to this template location
+          sed -i "s|custom_template/debug=\"\"|custom_template/debug=\".godot/builds/android_quest\"|" export_presets.cfg
+          sed -i "s|custom_template/release=\"\"|custom_template/release=\".godot/builds/android_quest\"|" export_presets.cfg
 
       - name: Build Quest APK
         shell: bash
