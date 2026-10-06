@@ -43,12 +43,6 @@ jobs:
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"             "platform-tools"             "build-tools;35.0.0"             "platforms;android-35"             "cmake;3.10.2.4988404"             "ndk;23.2.8568313"
 
-      - name: Start Android debug bridge
-        shell: bash
-        run: |
-          "$ANDROID_HOME/platform-tools/adb" start-server
-          "$ANDROID_HOME/platform-tools/adb" devices
-
       - name: Set up Godot
         uses: chickensoft-games/setup-godot@v2
         with:
