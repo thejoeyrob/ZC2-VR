@@ -62,12 +62,26 @@ jobs:
 
           echo "Found Android template: $ANDROID_SOURCE"
 
-          # Godot expects the Android gradle template in the project's .godot directory
+          # Extract to temp dir first to inspect structure
+          TEMP_EXTRACT="/tmp/android_template_temp"
+          mkdir -p "$TEMP_EXTRACT"
+          unzip -q "$ANDROID_SOURCE" -d "$TEMP_EXTRACT"
+
+          echo "Extracted template structure:"
+          find "$TEMP_EXTRACT" -maxdepth 2 -type d
+
+          # Godot gradle template should have a build/ directory with gradle content
+          # Copy the extracted content to .godot/builds/android_quest
           GODOT_ANDROID_DIR=".godot/builds/android_quest"
           mkdir -p "$GODOT_ANDROID_DIR"
 
-          echo "Extracting template to: $GODOT_ANDROID_DIR"
-          unzip -q "$ANDROID_SOURCE" -d "$GODOT_ANDROID_DIR"
+          # Copy the extracted contents (handles both "build/" and "asset/addons/" subdirs)
+          cp -r "$TEMP_EXTRACT"/* "$GODOT_ANDROID_DIR/" 2>/dev/null || true
+
+          # If there's a nested build directory, use that
+          if [ -d "$TEMP_EXTRACT/build" ] && [ ! -d "$GODOT_ANDROID_DIR/build" ]; then
+            cp -r "$TEMP_EXTRACT/build" "$GODOT_ANDROID_DIR/"
+          fi
 
           # Create .build_version file for gradle build system
           echo "Creating .build_version with version: $GODOT_VERSION"
@@ -76,10 +90,15 @@ jobs:
           # Verify installation
           if [ -f "$GODOT_ANDROID_DIR/.build_version" ]; then
             echo "OK: Template installed"
+            echo "Final template structure:"
+            find "$GODOT_ANDROID_DIR" -maxdepth 2 -type d
           else
             echo "ERROR: Failed to create version file"
             exit 1
           fi
+
+          # Cleanup
+          rm -rf "$TEMP_EXTRACT"
 
 
       - name: Build Quest APK
