@@ -53,23 +53,18 @@ jobs:
       - name: Install Android build template
         shell: bash
         run: |
-          ANDROID_SOURCE="$(find "$HOME/.local/share/godot/export_templates" -type f -name android_source.zip -print -quit)"
-          test -n "$ANDROID_SOURCE" || (echo "Android template not found" && exit 1)
-          echo "Using Android template: $ANDROID_SOURCE"
-          rm -rf android/build
-          mkdir -p android/build
-          unzip -q "$ANDROID_SOURCE" -d android/build
+          # Use Godot's built-in Android template installation
+          godot --headless --install-android-template
 
-          # Verify template was extracted correctly
-          if [ ! -f android/build/build.gradle ] && [ ! -f android/build/settings.gradle ]; then
-            echo "ERROR: Android template extraction failed - no build files found"
-            ls -la android/build/
+          # Verify the template was installed
+          TEMPLATES_DIR="$HOME/.local/share/godot/android"
+          if [ ! -d "$TEMPLATES_DIR" ]; then
+            echo "ERROR: Android template installation failed"
             exit 1
           fi
 
-          # Store version for gradle build
-          printf '%s' "$GODOT_VERSION" > android/build/.build_version
-          echo "Android template version: $GODOT_VERSION"
+          echo "Android template installed successfully in: $TEMPLATES_DIR"
+          ls -la "$TEMPLATES_DIR" | head -20
 
       - name: Build Quest APK
         shell: bash
