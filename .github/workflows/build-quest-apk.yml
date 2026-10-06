@@ -65,8 +65,21 @@ jobs:
           mkdir -p android/build
           unzip -q "$ANDROID_SOURCE" -d android/build
 
+          # Debug: show template structure to understand where version file should go
+          echo "Template structure:"
+          find android/build -maxdepth 3 -type f \( -name "*.gradle" -o -name "build.gradle" -o -name ".gradle*" -o -name "*version*" \) | head -20 || true
+
           # Create version file for gradle build system
+          # Try multiple locations based on template structure
           printf '%s' "$GODOT_VERSION" > android/build/.build_version
+
+          # Also create in src if it exists
+          if [ -d "android/build/src" ]; then
+            printf '%s' "$GODOT_VERSION" > android/build/src/.build_version
+          fi
+
+          echo "Version files created:"
+          find android/build -name ".build_version" | xargs ls -la || true
 
           ls -la android/build/ | head -10
           echo "Android template extracted successfully"
