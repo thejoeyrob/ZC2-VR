@@ -54,14 +54,22 @@ jobs:
         shell: bash
         run: |
           ANDROID_SOURCE="$(find "$HOME/.local/share/godot/export_templates" -type f -name android_source.zip -print -quit)"
-          test -n "$ANDROID_SOURCE"
+          test -n "$ANDROID_SOURCE" || (echo "Android template not found" && exit 1)
           echo "Using Android template: $ANDROID_SOURCE"
           rm -rf android/build
           mkdir -p android/build
           unzip -q "$ANDROID_SOURCE" -d android/build
-          test -f android/build/build.gradle || test -f android/build/settings.gradle
 
+          # Verify template was extracted correctly
+          if [ ! -f android/build/build.gradle ] && [ ! -f android/build/settings.gradle ]; then
+            echo "ERROR: Android template extraction failed - no build files found"
+            ls -la android/build/
+            exit 1
+          fi
+
+          # Store version for gradle build
           printf '%s' "$GODOT_VERSION" > android/build/.build_version
+          echo "Android template version: $GODOT_VERSION"
 
       - name: Build Quest APK
         shell: bash
