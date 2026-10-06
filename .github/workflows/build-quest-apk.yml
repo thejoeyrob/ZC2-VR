@@ -50,6 +50,23 @@ jobs:
           use-dotnet: false
           include-templates: true
 
+      - name: Install Android build template
+        shell: bash
+        run: |
+          # Extract Android template from cached export templates
+          ANDROID_SOURCE="$(find "$HOME/.local/share/godot/export_templates" -type f -name android_source.zip -print -quit)"
+          if [ -z "$ANDROID_SOURCE" ]; then
+            echo "ERROR: Android template not found in cache"
+            exit 1
+          fi
+
+          echo "Found Android template: $ANDROID_SOURCE"
+          rm -rf android/build
+          mkdir -p android/build
+          unzip -q "$ANDROID_SOURCE" -d android/build
+          ls -la android/build/ | head -10
+          echo "Android template extracted successfully"
+
       - name: Build Quest APK
         shell: bash
         run: |
