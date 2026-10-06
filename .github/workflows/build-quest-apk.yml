@@ -62,43 +62,25 @@ jobs:
 
           echo "Found Android template: $ANDROID_SOURCE"
 
-          # Extract to temp dir first to inspect structure
-          TEMP_EXTRACT="/tmp/android_template_temp"
-          mkdir -p "$TEMP_EXTRACT"
-          unzip -q "$ANDROID_SOURCE" -d "$TEMP_EXTRACT"
+          # Extract the template to the cached location where Godot expects it
+          ANDROID_CACHE_DIR="$HOME/.local/share/godot/export_templates/$GODOT_VERSION/android"
+          mkdir -p "$ANDROID_CACHE_DIR"
 
-          echo "Extracted template structure:"
-          find "$TEMP_EXTRACT" -maxdepth 2 -type d
+          echo "Extracting template to: $ANDROID_CACHE_DIR"
+          unzip -q "$ANDROID_SOURCE" -d "$ANDROID_CACHE_DIR"
 
-          # Godot gradle template should have a build/ directory with gradle content
-          # Copy the extracted content to .godot/builds/android_quest
-          GODOT_ANDROID_DIR=".godot/builds/android_quest"
-          mkdir -p "$GODOT_ANDROID_DIR"
-
-          # Copy the extracted contents (handles both "build/" and "asset/addons/" subdirs)
-          cp -r "$TEMP_EXTRACT"/* "$GODOT_ANDROID_DIR/" 2>/dev/null || true
-
-          # If there's a nested build directory, use that
-          if [ -d "$TEMP_EXTRACT/build" ] && [ ! -d "$GODOT_ANDROID_DIR/build" ]; then
-            cp -r "$TEMP_EXTRACT/build" "$GODOT_ANDROID_DIR/"
-          fi
-
-          # Create .build_version file for gradle build system
+          # Create .build_version file in the cached template location for gradle build system
           echo "Creating .build_version with version: $GODOT_VERSION"
-          echo -n "$GODOT_VERSION" > "$GODOT_ANDROID_DIR/.build_version"
+          echo -n "$GODOT_VERSION" > "$ANDROID_CACHE_DIR/.build_version"
 
           # Verify installation
-          if [ -f "$GODOT_ANDROID_DIR/.build_version" ]; then
-            echo "OK: Template installed"
-            echo "Final template structure:"
-            find "$GODOT_ANDROID_DIR" -maxdepth 2 -type d
+          if [ -f "$ANDROID_CACHE_DIR/.build_version" ]; then
+            echo "OK: Template installed at $ANDROID_CACHE_DIR"
+            ls -la "$ANDROID_CACHE_DIR" | head -20
           else
             echo "ERROR: Failed to create version file"
             exit 1
           fi
-
-          # Cleanup
-          rm -rf "$TEMP_EXTRACT"
 
 
       - name: Build Quest APK
