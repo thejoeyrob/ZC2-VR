@@ -81,9 +81,6 @@ jobs:
             exit 1
           fi
 
-          # Update export preset to point to this template location
-          sed -i "s|custom_template/debug=\"\"|custom_template/debug=\".godot/builds/android_quest\"|" export_presets.cfg
-          sed -i "s|custom_template/release=\"\"|custom_template/release=\".godot/builds/android_quest\"|" export_presets.cfg
 
       - name: Build Quest APK
         shell: bash
