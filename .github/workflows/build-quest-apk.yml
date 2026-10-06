@@ -50,22 +50,6 @@ jobs:
           use-dotnet: false
           include-templates: true
 
-      - name: Install Android build template
-        shell: bash
-        run: |
-          # Use Godot's built-in Android template installation
-          godot --headless --install-android-template
-
-          # Verify the template was installed
-          TEMPLATES_DIR="$HOME/.local/share/godot/android"
-          if [ ! -d "$TEMPLATES_DIR" ]; then
-            echo "ERROR: Android template installation failed"
-            exit 1
-          fi
-
-          echo "Android template installed successfully in: $TEMPLATES_DIR"
-          ls -la "$TEMPLATES_DIR" | head -20
-
       - name: Build Quest APK
         shell: bash
         run: |
