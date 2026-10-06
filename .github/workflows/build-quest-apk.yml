@@ -64,6 +64,10 @@ jobs:
           rm -rf android/build
           mkdir -p android/build
           unzip -q "$ANDROID_SOURCE" -d android/build
+
+          # Create version file for gradle build system
+          printf '%s' "$GODOT_VERSION" > android/build/.build_version
+
           ls -la android/build/ | head -10
           echo "Android template extracted successfully"
 
